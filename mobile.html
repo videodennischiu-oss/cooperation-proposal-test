@@ -3,172 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BTi FIFA 2026 Mobile Prototype</title>
+    <title>BTi Mobile Prototype V2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
-        body { 
-            background-color: #0b0e14; 
-            color: white; 
-            font-family: -apple-system, sans-serif;
-            margin: 0; padding: 0;
-            overflow: hidden; /* 防止滾動，讓它像個 App */
-        }
+        body { background-color: #0b0e14; color: white; margin: 0; padding: 0; overflow: hidden; font-family: sans-serif; }
         
-        /* 100% 填滿手機螢幕的容器 */
-        section {
+        /* 容器確保 9:16 比例並撐滿螢幕 */
+        .page-step {
             position: fixed;
             inset: 0;
             width: 100vw;
             height: 100vh;
-            background-size: cover;
-            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background: #000;
         }
 
-        /* 語言切換按鈕 (固定右上方) */
+        .img-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-width: 500px; /* 模擬手機寬度上限 */
+        }
+
+        .bg-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* 確保 9:16 圖不被裁切 */
+        }
+
+        /* 語言切換 - 提高層級 */
         .lang-toggle {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: #fbbf24;
-            padding: 8px 16px;
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
+            background: rgba(255, 191, 36, 0.9);
+            color: #000;
+            padding: 8px 15px;
             border-radius: 20px;
             font-size: 14px;
             font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
-        /* 熱點區域：這次我們根據 9:16 的比例微調 */
+        /* 熱點按鈕 - 加上虛線讓您找得到 */
         .hotspot { 
             position: absolute; 
-            border: 2px dashed rgba(251, 191, 36, 0.6); 
-            background: rgba(251, 191, 36, 0.1); 
+            border: 2px dashed rgba(251, 191, 36, 0.8); 
+            background: rgba(251, 191, 36, 0.2); 
             z-index: 50;
-        }
-
-        /* 彈窗樣式 */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.85);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 200;
-            backdrop-filter: blur(5px);
+            color: #fbbf24;
+            font-size: 10px;
+            text-align: center;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
             padding: 20px;
         }
 
-        .hidden { display: none !important; }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
+        .error-msg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff4444;
+            text-align: center;
+            z-index: 1;
         }
-        .pulse-icon { animation: pulse 2s infinite; }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <button class="lang-toggle" onclick="toggleLang()" id="langBtn">English</button>
+    <!-- 右上角語言按鈕 -->
+    <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
 
-    <!-- STEP 1: 首頁 (使用您的 9:16 Home 圖片) -->
-    <section id="step-home" style="background-image: url('home.png');">
-        <!-- 點擊 Banner 區塊 -->
-        <div onclick="showNavModal()" class="absolute top-[10%] left-[5%] w-[90%] h-[20%] cursor-pointer"></div>
-        <!-- 點擊底部 Icon 區塊 (模擬 26 Icon) -->
-        <div onclick="showNavModal()" class="absolute bottom-[5%] right-[5%] w-20 h-20 pulse-icon cursor-pointer">
-            <img src="icon.png" class="w-full h-full object-contain">
+    <!-- STEP 1: 首頁 (Debet) -->
+    <section id="step-home" class="page-step">
+        <div class="img-container">
+            <div class="error-msg">圖片讀取中或名稱錯誤...</div>
+            <img src="home.png" class="bg-img" onerror="this.previousElementSibling.innerText='找不到 home.png'">
+            
+            <!-- 熱點：Banner 區域 -->
+            <div onclick="showNavModal()" class="hotspot" style="top: 10%; left: 5%; width: 90%; height: 25%;">
+                點擊進入演示
+            </div>
+            
+            <!-- 熱點：底部的 K-Sports 按鈕 -->
+            <div onclick="showNavModal()" class="hotspot" style="top: 48%; left: 5%; width: 44%; height: 18%;">
+                K-SPORTS
+            </div>
         </div>
     </section>
 
-    <!-- STEP 2: 對戰表 (使用您的 9:16 Bracket 圖片) -->
-    <section id="step-bracket" class="hidden" style="background-image: url('bracket.png');">
-        <!-- 根據您的 9:16 圖片佈局設置熱點 (SPA/CRO/ALB 區域) -->
-        <div onclick="openOddsPopup()" class="hotspot" style="top: 18%; right: 5%; width: 35%; height: 12%; border-radius: 10px;"></div>
-        <div onclick="openOddsPopup()" class="hotspot" style="top: 38%; right: 5%; width: 35%; height: 12%; border-radius: 10px;"></div>
-        <div onclick="openOddsPopup()" class="hotspot" style="top: 58%; right: 5%; width: 35%; height: 12%; border-radius: 10px;"></div>
-        
-        <!-- 返回按鈕 -->
-        <div class="absolute bottom-10 w-full text-center">
-            <button onclick="navTo('step-home')" class="text-white/50 underline text-sm" id="ui-back">返回首頁</button>
+    <!-- STEP 2: 對戰表 (CUP 26) -->
+    <section id="step-bracket" class="page-step hidden">
+        <div class="img-container">
+            <div class="error-msg">圖片讀取中...</div>
+            <img src="bracket.png" class="bg-img" onerror="this.previousElementSibling.innerText='找不到 bracket.png'">
+            
+            <!-- 熱點：右側賠率按鈕 (SPA/CRO/ALB) -->
+            <div onclick="openOddsPopup()" class="hotspot" style="top: 18%; right: 5%; width: 35%; height: 12%;">下注 SPA</div>
+            <div onclick="openOddsPopup()" class="hotspot" style="top: 38%; right: 5%; width: 35%; height: 12%;">下注 CRO</div>
+            
+            <button onclick="navTo('step-home')" class="absolute bottom-5 left-1/2 -translate-x-1/2 bg-white/20 px-4 py-1 rounded text-xs" id="ui-back">返回</button>
         </div>
     </section>
 
-    <!-- STEP 3: 投注頁 (使用您的 9:16 Betting Site 圖片) -->
-    <section id="step-betting" class="hidden" style="background-image: url('betting_site.png');">
-        <div class="absolute bottom-10 w-full text-center">
-            <button onclick="navTo('step-home')" class="bg-white/10 border border-white/20 px-8 py-3 rounded-full" id="ui-restart">重新演示</button>
+    <!-- STEP 3: 最終頁 (BTi Slip) -->
+    <section id="step-betting" class="page-step hidden">
+        <div class="img-container">
+            <div class="error-msg">圖片讀取中...</div>
+            <img src="betting_site.png" class="bg-img" onerror="this.previousElementSibling.innerText='找不到 betting_site.png'">
+            
+            <button onclick="navTo('step-home')" class="absolute bottom-10 left-1/2 -translate-x-1/2 bg-white/20 border border-white/30 px-8 py-3 rounded-full text-sm" id="ui-restart">重回首頁</button>
         </div>
     </section>
 
     <!-- 彈窗：方案選擇 -->
     <div id="nav-modal" class="modal-overlay hidden">
         <div class="bg-gray-800 p-8 rounded-3xl border border-gray-700 w-full max-w-xs animate__animated animate__fadeInUp">
-            <h3 class="text-xl font-bold mb-6 text-center text-yellow-500" id="ui-modal-title">請選擇演示路徑</h3>
-            <button onclick="navTo('step-bracket')" class="w-full bg-indigo-600 py-4 rounded-2xl mb-4 font-bold">
-                <span id="ui-opt1">方案 1：活動專區</span>
-            </button>
-            <button onclick="navTo('step-betting')" class="w-full bg-emerald-600 py-4 rounded-2xl font-bold">
-                <span id="ui-opt2">方案 2：直接跳轉</span>
-            </button>
-            <button onclick="closeModals()" class="mt-4 w-full text-gray-400 text-sm" id="ui-cancel">取消</button>
+            <h3 class="text-xl font-bold mb-8 text-center text-yellow-500" id="ui-modal-title">請選擇演示路徑</h3>
+            <button onclick="navTo('step-bracket')" class="w-full bg-indigo-600 py-4 rounded-xl mb-4 font-bold">方案 1：活動專區</button>
+            <button onclick="navTo('step-betting')" class="w-full bg-emerald-600 py-4 rounded-xl font-bold">方案 2：直接跳轉</button>
+            <button onclick="closeModals()" class="mt-4 w-full text-gray-500 text-sm" id="ui-cancel">取消</button>
         </div>
     </div>
 
-    <!-- 彈窗：API 賠率卡 -->
+    <!-- 彈窗：API 賠率 -->
     <div id="odds-popup" class="modal-overlay hidden">
-        <div class="bg-[#1e222a] p-2 rounded-2xl w-full max-w-xs animate__animated animate__zoomIn">
-            <div class="flex justify-between items-center p-3">
-                <span class="text-[10px] font-bold text-blue-400">WHALE API FEED</span>
-                <button onclick="closeModals()" class="text-white text-xl">&times;</button>
-            </div>
-            <img src="odds_card.png" class="w-full rounded-xl mb-4">
+        <div class="bg-[#1e222a] p-2 rounded-2xl w-full max-w-xs text-center">
+            <img src="odds_card.png" class="w-full rounded-xl mb-4" onerror="this.src='https://via.placeholder.com/300x150?text=odds_card.png+Missing'">
             <button onclick="navTo('step-betting')" class="w-full bg-orange-500 py-4 rounded-xl font-bold italic" id="ui-bet">BET NOW</button>
         </div>
     </div>
 
     <script>
         const langData = {
-            zh: {
-                modalTitle: '請選擇演示路徑',
-                opt1: '方案 1：活動專區',
-                opt2: '方案 2：直接跳轉',
-                cancel: '取消',
-                back: '返回首頁',
-                restart: '重新演示',
-                bet: '立即投注',
-                btn: 'English'
-            },
-            en: {
-                modalTitle: 'Select Demo Path',
-                opt1: 'Option 1: Campaign Page',
-                opt2: 'Option 2: Direct Redirect',
-                cancel: 'Cancel',
-                back: 'Back to Home',
-                restart: 'Restart Demo',
-                bet: 'Bet Now',
-                btn: '中文'
-            }
+            zh: { modalTitle: '請選擇演示路徑', cancel: '取消', back: '返回', restart: '重新演示', bet: '立即投注', btn: 'EN' },
+            en: { modalTitle: 'Select Path', cancel: 'Cancel', back: 'Back', restart: 'Restart', bet: 'Bet Now', btn: '中' }
         };
 
         let currentLang = 'zh';
 
         function toggleLang() {
             currentLang = (currentLang === 'zh') ? 'en' : 'zh';
-            const d = langData[currentLang];
-            document.getElementById('ui-modal-title').innerText = d.modalTitle;
-            document.getElementById('ui-opt1').innerText = d.opt1;
-            document.getElementById('ui-opt2').innerText = d.opt2;
-            document.getElementById('ui-cancel').innerText = d.cancel;
-            document.getElementById('ui-back').innerText = d.back;
-            document.getElementById('ui-restart').innerText = d.restart;
-            document.getElementById('ui-bet').innerText = d.bet;
-            document.getElementById('langBtn').innerText = d.btn;
+            document.getElementById('ui-modal-title').innerText = langData[currentLang].modalTitle;
+            document.getElementById('ui-cancel').innerText = langData[currentLang].cancel;
+            document.getElementById('ui-back').innerText = langData[currentLang].back;
+            document.getElementById('ui-restart').innerText = langData[currentLang].restart;
+            document.getElementById('ui-bet').innerText = langData[currentLang].bet;
+            document.getElementById('langBtn').innerText = langData[currentLang].btn;
         }
 
         function showNavModal() { document.getElementById('nav-modal').classList.remove('hidden'); }
