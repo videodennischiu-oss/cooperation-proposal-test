@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BTi 世界盃 互動演示原型 V4 - Multi-Lang</title>
+    <title>BTi 世界盃 互動演示原型 V4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
         body { background-color: #0b0e14; color: white; min-height: 100vh; font-family: sans-serif; overflow-x: hidden; }
         
+        /* 圖片容器 */
         .image-container { 
             position: relative; 
             display: inline-block; 
@@ -21,6 +22,7 @@
             overflow: hidden;
         }
 
+        /* 呼吸動態效果 */
         @keyframes breathing {
             0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.7); }
             50% { transform: scale(1.15); box-shadow: 0 0 30px 10px rgba(251, 191, 36, 0); }
@@ -38,6 +40,7 @@
             animation: breathing 2s infinite ease-in-out;
         }
 
+        /* 入口字樣動態 */
         .text-entry-btn {
             position: absolute;
             top: 25px;
@@ -49,6 +52,7 @@
         }
         .text-entry-btn:hover { filter: brightness(1.2); transform: translateY(-2px); }
 
+        /* 熱點區域 */
         .hotspot { 
             position: absolute; 
             border: 2px dashed rgba(251, 191, 36, 0.5); 
@@ -59,6 +63,7 @@
         }
         .hotspot:hover { background: rgba(251, 191, 36, 0.3); border-color: #fbbf24; }
 
+        /* 彈窗遮罩 */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -71,32 +76,19 @@
         }
 
         .hidden { display: none !important; }
-
-        /* 語言切換按鈕樣式 */
-        .lang-btn {
-            background: #374151;
-            padding: 4px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: 0.2s;
-            border: 1px solid #4b5563;
-        }
-        .lang-btn:hover { background: #4b5563; border-color: #fbbf24; }
     </style>
 </head>
 <body class="flex flex-col items-center p-6">
 
-    <!-- 頂部導覽欄 -->
     <div class="w-full max-w-6xl mb-6 flex justify-between items-center bg-gray-900/90 p-5 rounded-2xl border border-gray-800">
         <div>
-            <h1 class="text-2xl font-bold text-yellow-500" data-i18n="title">BTi FIFA 2026 Demo</h1>
-            <p class="text-sm text-gray-400" data-i18n="tips">交互提示：點擊具備 <span class="text-yellow-400 font-bold underline">呼吸動態的 Icon</span> 或 <span class="text-yellow-400 font-bold underline">左右賽事區域</span></p>
+            <h1 class="text-2xl font-bold text-yellow-500">BTi FIFA 2026 Demo</h1>
+            <p class="text-sm text-gray-400" id="ui-tips">交互提示：點擊具備 <span class="text-yellow-400 font-bold underline">呼吸動態的 Icon</span> 或 <span class="text-yellow-400 font-bold underline">左右賽事區域</span></p>
         </div>
-        <div class="flex items-center space-x-3">
-            <!-- 語言切換按鈕 -->
-            <button onclick="toggleLang()" class="lang-btn" id="lang-toggle-btn">English</button>
-            <button onclick="location.reload()" class="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-xl transition font-medium" data-i18n="reset">重新演示</button>
+        <div class="flex space-x-3">
+            <!-- 新增語言切換按鈕 -->
+            <button onclick="toggleLang()" class="bg-gray-800 hover:bg-gray-700 border border-gray-600 px-4 py-2 rounded-xl transition text-sm font-bold" id="lang-btn">English</button>
+            <button onclick="location.reload()" class="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-xl transition font-medium" id="ui-reload">重新演示</button>
         </div>
     </div>
 
@@ -104,17 +96,25 @@
     <section id="step-home" class="w-full max-w-6xl">
         <div class="image-container">
             <img src="home.png" alt="home" class="w-full block">
+            
+            <!-- 入口字樣 -->
             <img src="text_entry.png" onclick="showNavModal()" alt="World Cup Entry" class="text-entry-btn">
+            
+            <!-- 呼吸動態 Icon -->
             <img src="icon.png" onclick="showNavModal()" alt="icon" class="breathing-icon">
         </div>
     </section>
 
-    <!-- STEP 2: 活動對戰表 -->
+    <!-- STEP 2: 活動對戰表 (方案 1) -->
     <section id="step-bracket" class="w-full max-w-6xl hidden animate__animated animate__fadeIn">
         <div class="image-container">
             <img src="bracket.png" alt="bracket" class="w-full block">
+            
+            <!-- 左側賽事方塊 -->
             <div onclick="openOddsPopup()" class="hotspot" style="top: 19%; left: 4%; width: 17%; height: 13%; border-radius: 8px;"></div>
             <div onclick="openOddsPopup()" class="hotspot" style="top: 39%; left: 4%; width: 17%; height: 13%; border-radius: 8px;"></div>
+            
+            <!-- 右側賽事方塊 -->
             <div onclick="openOddsPopup()" class="hotspot" style="top: 19%; right: 4%; width: 17%; height: 13%; border-radius: 8px;"></div>
             <div onclick="openOddsPopup()" class="hotspot" style="top: 39%; right: 4%; width: 17%; height: 13%; border-radius: 8px;"></div>
         </div>
@@ -127,20 +127,116 @@
         </div>
     </section>
 
-    <!-- 彈窗 1：路徑選擇 -->
+    <!-- 彈窗 1：路徑選擇 (方案1/方案2) -->
     <div id="nav-modal" class="modal-overlay hidden">
         <div class="bg-gray-800 p-8 rounded-3xl border border-gray-700 max-w-md w-full animate__animated animate__zoomIn">
-            <h3 class="text-2xl font-bold mb-8 text-center text-yellow-500" data-i18n="modalTitle">請選擇演示路徑</h3>
+            <h3 class="text-2xl font-bold mb-8 text-center text-yellow-500" id="ui-modal-title">請選擇演示路徑</h3>
             <div class="space-y-4">
                 <button onclick="navTo('step-bracket')" class="w-full bg-indigo-600 p-5 rounded-2xl text-left hover:bg-indigo-500 transition shadow-lg group">
-                    <p class="font-extrabold text-xl group-hover:translate-x-1 transition" data-i18n="opt1Title">方案 1：活動專區</p>
-                    <p class="text-sm opacity-70 mt-1" data-i18n="opt1Desc">進入對戰表頁面，由前端串接 Whale API</p>
+                    <p class="font-extrabold text-xl group-hover:translate-x-1 transition" id="ui-opt1-title">方案 1：活動專區</p>
+                    <p class="text-sm opacity-70 mt-1" id="ui-opt1-desc">進入對戰表頁面，由前端串接 Whale API</p>
                 </button>
                 <button onclick="navTo('step-betting')" class="w-full bg-emerald-600 p-5 rounded-2xl text-left hover:bg-emerald-500 transition shadow-lg group">
-                    <p class="font-extrabold text-xl group-hover:translate-x-1 transition" data-i18n="opt2Title">方案 2：直接跳轉</p>
-                    <p class="text-sm opacity-70 mt-1" data-i18n="opt2Desc">直接引導進入 BTi 完整投注盤口</p>
+                    <p class="font-extrabold text-xl group-hover:translate-x-1 transition" id="ui-opt2-title">方案 2：直接跳轉</p>
+                    <p class="text-sm opacity-70 mt-1" id="ui-opt2-desc">直接引導進入 BTi 完整投注盤口</p>
                 </button>
             </div>
-            <button onclick="closeModals()" class="mt-8 text-gray-500 w-full text-center hover:text-gray-300" data-i18n="cancel">取消並返回</button>
+            <button onclick="closeModals()" class="mt-8 text-gray-500 w-full text-center hover:text-gray-300" id="ui-cancel">取消並返回</button>
         </div>
     </div>
+
+    <!-- 彈窗 2：Odds Card Popup -->
+    <div id="odds-popup" class="modal-overlay hidden">
+        <div class="relative bg-[#1e222a] p-2 rounded-2xl shadow-2xl max-w-sm w-full animate__animated animate__bounceIn">
+            <div class="flex justify-between items-center p-3">
+                <span class="text-xs font-bold text-blue-400 font-mono">WHALE API | LIVE FEED</span>
+                <button onclick="closeModals()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <img src="odds_card.png" alt="odds card" class="w-full rounded-xl">
+            <div class="p-4">
+                <button onclick="navTo('step-betting')" class="w-full bg-[#ff7a00] hover:bg-[#ff9533] text-white py-4 rounded-xl font-black text-lg transition-all transform active:scale-95 shadow-xl" id="ui-bet-btn">
+                    立即投注 (進入盤口頁)
+                </button>
+                <p class="text-[10px] text-center text-gray-500 mt-3" id="ui-footer-tip">點擊按鈕模擬將比賽 ID 與賠率帶入 BTi 注單系統</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. 多國語言字典
+        const langData = {
+            zh: {
+                tips: '交互提示：點擊具備 <span class="text-yellow-400 font-bold underline">呼吸動態的 Icon</span> 或 <span class="text-yellow-400 font-bold underline">左右賽事區域</span>',
+                reload: '重新演示',
+                modalTitle: '請選擇演示路徑',
+                opt1Title: '方案 1：活動專區',
+                opt1Desc: '進入對戰表頁面，由前端串接 Whale API',
+                opt2Title: '方案 2：直接跳轉',
+                opt2Desc: '直接引導進入 BTi 完整投注盤口',
+                cancel: '取消並返回',
+                betBtn: '立即投注 (進入盤口頁)',
+                footerTip: '點擊按鈕模擬將比賽 ID 與賠率帶入 BTi 注單系統',
+                btnText: 'English'
+            },
+            en: {
+                tips: 'Interaction: Click the <span class="text-yellow-400 font-bold underline">Breathing Icon</span> or <span class="text-yellow-400 font-bold underline">Match Brackets</span>',
+                reload: 'Reset Demo',
+                modalTitle: 'Select Demo Path',
+                opt1Title: 'Option 1: Campaign Page',
+                opt1Desc: 'Enter bracket page, integrated via Whale API',
+                opt2Title: 'Option 2: Direct Redirect',
+                opt2Desc: 'Directly navigate to full BTi betting markets',
+                cancel: 'Cancel & Return',
+                betBtn: 'Bet Now (Enter Markets)',
+                footerTip: 'Click to simulate passing Match ID & Odds to BTi system',
+                btnText: '中文'
+            }
+        };
+
+        let currentLang = 'zh';
+
+        // 2. 切換語言函數
+        function toggleLang() {
+            currentLang = (currentLang === 'zh') ? 'en' : 'zh';
+            const data = langData[currentLang];
+            
+            // 更新 UI 文字
+            document.getElementById('ui-tips').innerHTML = data.tips;
+            document.getElementById('ui-reload').innerText = data.reload;
+            document.getElementById('ui-modal-title').innerText = data.modalTitle;
+            document.getElementById('ui-opt1-title').innerText = data.opt1Title;
+            document.getElementById('ui-opt1-desc').innerText = data.opt1Desc;
+            document.getElementById('ui-opt2-title').innerText = data.opt2Title;
+            document.getElementById('ui-opt2-desc').innerText = data.opt2Desc;
+            document.getElementById('ui-cancel').innerText = data.cancel;
+            document.getElementById('ui-bet-btn').innerText = data.betBtn;
+            document.getElementById('ui-footer-tip').innerText = data.footerTip;
+            document.getElementById('lang-btn').innerText = data.btnText;
+        }
+
+        // 顯示路徑選擇 (原本功能)
+        function showNavModal() {
+            document.getElementById('nav-modal').classList.remove('hidden');
+        }
+
+        // 顯示賠率彈窗 (原本功能)
+        function openOddsPopup() {
+            document.getElementById('odds-popup').classList.remove('hidden');
+        }
+
+        // 關閉所有彈窗 (原本功能)
+        function closeModals() {
+            document.getElementById('nav-modal').classList.add('hidden');
+            document.getElementById('odds-popup').classList.add('hidden');
+        }
+
+        // 跳轉步驟 (原本功能)
+        function navTo(stepId) {
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+            closeModals();
+            document.getElementById(stepId).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
