@@ -22,8 +22,8 @@
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
         }
         .fixed-icon {
-            position: fixed; bottom: 30px; right: 20px;
-            width: 70px; height: 70px; z-index: 999;
+            position: fixed; bottom: 45px; right: 35px;
+            width: 85px; height: 85px; z-index: 999;
             cursor: pointer; border-radius: 50%;
             animation: breathing 2s infinite ease-in-out;
             border: 2px solid #fbbf24;
@@ -35,9 +35,11 @@
             z-index: 999; background: rgba(59, 130, 246, 0.8);
             padding: 10px 15px; border-radius: 50px;
             font-weight: bold; font-size: 14px; border: 1px solid white;
+             /* --- 加入這一行即可隱藏 --- */
+            display: none !important;
         }
 
-        .entry-text { position: absolute; top: 24%; left: 20px; width: 90px; z-index: 100;
+        .entry-text { position: absolute; top: 21%; left: 55px; width: 140px; z-index: 100;
 /* --- 加入呼吸動態 --- */
     animation: breathing 2s infinite ease-in-out;
     /* 確保從圖片中心縮放，呼吸感才自然 */
@@ -88,7 +90,7 @@
 
     <!-- 頁面 1: 首頁 -->
     <section id="step-home" class="page-section">
-        <img src="mobile_home.png" class="bg-img">
+        <img src="mobile_home.jpg" class="bg-img">
         <img src="mobile_text_entry.png" onclick="showNavModal()" class="entry-text">
         <img src="icon.png" onclick="showNavModal()" class="fixed-icon">
     </section>
